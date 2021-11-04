@@ -25,7 +25,7 @@ tensorflow==2.2.0
 
 ### 文件下载
 训练所需的deeplabv3_mobilenetv2.h5和deeplabv3_xception.h5可在百度网盘中下载。    
-链接: https://pan.baidu.com/s/1zVRshWRkb5C3kmDMwEf89A 提取码: ccq5    
+链接: https://pan.baidu.com/s/1FVT7xr5zwTngdNEd56dRTg 提取码: gjx7   
 
 VOC拓展数据集的百度网盘如下：  
 链接: https://pan.baidu.com/s/1BrR7AUM1XJvPWjKMIy2uEw 提取码: vszf    
