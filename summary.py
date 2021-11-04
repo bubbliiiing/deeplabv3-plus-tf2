@@ -4,7 +4,7 @@
 from nets.deeplab import Deeplabv3
 
 if __name__ == "__main__":
-    model = Deeplabv3([512,512,3], 21, backbone='mobilenet')
+    model = Deeplabv3([512, 512, 3], 21, backbone='mobilenet')
     model.summary()
 
     for i,layer in enumerate(model.layers):

@@ -73,7 +73,7 @@ class ExponentDecayScheduler(keras.callbacks.Callback):
         learning_rate = K.get_value(self.model.optimizer.lr) * self.decay_rate
         K.set_value(self.model.optimizer.lr, learning_rate)
         if self.verbose > 0:
-            print('Setting learning rate to %s.' % (learning_rate))
+            print('\nSetting learning rate to %s.' % (learning_rate))
 
 class ModelCheckpoint(keras.callbacks.Callback):
     def __init__(self, filepath, monitor='val_loss', verbose=0,
