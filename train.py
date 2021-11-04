@@ -104,7 +104,7 @@ if __name__ == "__main__":
     #----------------------------------------------------#
     Init_Epoch          = 0
     Freeze_Epoch        = 50
-    Freeze_batch_size   = 4
+    Freeze_batch_size   = 8
     Freeze_lr           = 5e-4
     #----------------------------------------------------#
     #   解冻阶段训练参数
@@ -222,8 +222,8 @@ if __name__ == "__main__":
         train_dataloader    = DeeplabDataset(train_lines, input_shape, batch_size, num_classes, True, VOCdevkit_path)
         val_dataloader      = DeeplabDataset(val_lines, input_shape, batch_size, num_classes, False, VOCdevkit_path)
 
-        epoch_step      = 5
-        epoch_step_val  = 5
+        epoch_step      = len(train_lines) // batch_size
+        epoch_step_val  = len(val_lines) // batch_size
         
         if epoch_step == 0 or epoch_step_val == 0:
             raise ValueError("数据集过小，无法进行训练，请扩充数据集。")
