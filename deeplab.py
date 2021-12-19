@@ -57,7 +57,6 @@ class DeeplabV3(object):
         self.__dict__.update(self._defaults)
         for name, value in kwargs.items():
             setattr(self, name, value)
-        self.__dict__.update(self._defaults)
         #---------------------------------------------------#
         #   画框设置不同的颜色
         #---------------------------------------------------#
