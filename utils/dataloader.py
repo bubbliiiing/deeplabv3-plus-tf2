@@ -38,7 +38,7 @@ class DeeplabDataset(keras.utils.Sequence):
             #   数据增强
             #-------------------------------#
             jpg, png    = self.get_random_data(jpg, png, self.input_shape, random = self.train)
-            jpg         = preprocess_input(np.array(jpg, np.float64))
+            jpg         = preprocess_input(np.array(jpg, np.float32))
             png         = np.array(png)
             png[png >= self.num_classes] = self.num_classes
             #-------------------------------------------------------#
@@ -74,7 +74,7 @@ class DeeplabDataset(keras.utils.Sequence):
                 #   数据增强
                 #-------------------------------#
                 jpg, png    = self.get_random_data(jpg, png, self.input_shape, random = self.train)
-                jpg         = preprocess_input(np.array(jpg, np.float64))
+                jpg         = preprocess_input(np.array(jpg, np.float32))
                 png         = np.array(png)
                 png[png >= self.num_classes] = self.num_classes
                 #-------------------------------------------------------#
@@ -92,6 +92,9 @@ class DeeplabDataset(keras.utils.Sequence):
             images  = np.array(images)
             targets = np.array(targets)
             yield images, targets
+
+    def on_epoch_end(self):
+        shuffle(self.annotation_lines)
             
     def rand(self, a=0, b=1):
         return np.random.rand() * (b - a) + a
@@ -147,21 +150,27 @@ class DeeplabDataset(keras.utils.Sequence):
         image = new_image
         label = new_label
 
-        # distort image
-        hue = self.rand(-hue, hue)
-        sat = self.rand(1, sat) if self.rand()<.5 else 1/self.rand(1, sat)
-        val = self.rand(1, val) if self.rand()<.5 else 1/self.rand(1, val)
-        x = cv2.cvtColor(np.array(image,np.float32)/255, cv2.COLOR_RGB2HSV)
-        x[..., 0] += hue*360
-        x[..., 0][x[..., 0]>1] -= 1
-        x[..., 0][x[..., 0]<0] += 1
-        x[..., 1] *= sat
-        x[..., 2] *= val
-        x[x[:,:, 0]>360, 0] = 360
-        x[:, :, 1:][x[:, :, 1:]>1] = 1
-        x[x<0] = 0
-        image_data = cv2.cvtColor(x, cv2.COLOR_HSV2RGB)*255
-        return image_data,label
+        image_data      = np.array(image, np.uint8)
+        #---------------------------------#
+        #   对图像进行色域变换
+        #   计算色域变换的参数
+        #---------------------------------#
+        r               = np.random.uniform(-1, 1, 3) * [hue, sat, val] + 1
+        #---------------------------------#
+        #   将图像转到HSV上
+        #---------------------------------#
+        hue, sat, val   = cv2.split(cv2.cvtColor(image_data, cv2.COLOR_RGB2HSV))
+        dtype           = image_data.dtype
+        #---------------------------------#
+        #   应用变换
+        #---------------------------------#
+        x       = np.arange(0, 256, dtype=r.dtype)
+        lut_hue = ((x * r[0]) % 180).astype(dtype)
+        lut_sat = np.clip(x * r[1], 0, 255).astype(dtype)
+        lut_val = np.clip(x * r[2], 0, 255).astype(dtype)
 
-    def on_epoch_begin(self):
-        shuffle(self.annotation_lines)
+        image_data = cv2.merge((cv2.LUT(hue, lut_hue), cv2.LUT(sat, lut_sat), cv2.LUT(val, lut_val)))
+        image_data = cv2.cvtColor(image_data, cv2.COLOR_HSV2RGB)
+        
+        return image_data, label
+    
