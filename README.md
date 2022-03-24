@@ -35,9 +35,6 @@ deeplabv3+ | https://github.com/bubbliiiing/deeplabv3-plus-tf2
 ### 所需环境
 tensorflow==2.2.0
 
-### 注意事项
-代码中的deeplabv3_mobilenetv2.h5和deeplabv3_xception.h5是基于VOC拓展数据集训练的。训练和预测时注意修改backbone。    
-
 ### 文件下载
 训练所需的deeplabv3_mobilenetv2.h5和deeplabv3_xception.h5可在百度网盘中下载。    
 链接: https://pan.baidu.com/s/1bjSDC9oUaX2Ww8f-raDUxA 提取码: twpk   
