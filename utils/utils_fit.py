@@ -42,7 +42,7 @@ def get_val_step_fn(strategy):
         return val_step
     else:
         #----------------------#
-        #   多gpu训练
+        #   多gpu验证
         #----------------------#
         @tf.function
         def distributed_val_step(images, labels, net, optimizer, loss, metrics):
